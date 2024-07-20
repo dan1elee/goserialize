@@ -17,7 +17,7 @@ func encodeComplex64(v complex64) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.COMPLEX64, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.COMPLEX64, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeComplex128(v complex128) ([]byte, error) {
@@ -31,5 +31,5 @@ func encodeComplex128(v complex128) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.COMPLEX128, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.COMPLEX128, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }

@@ -46,9 +46,9 @@ func encodeBool(v reflect.Value) (bytes []byte, err error) {
 	}()
 	val := v.Bool()
 	if val {
-		return []byte{enums.BOOL, 3, 1}, nil
+		return []byte{enums.BOOL, byte(enums.EncodeHeaderLen + 1), 1}, nil
 	} else {
-		return []byte{enums.BOOL, 3, 0}, nil
+		return []byte{enums.BOOL, byte(enums.EncodeHeaderLen + 1), 0}, nil
 	}
 }
 
@@ -139,8 +139,8 @@ func encodeComplex(v reflect.Value) (bytes []byte, err error) {
 func encodeArray(v reflect.Value) (bytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
-		return []byte{enums.ARRAY, 2}, nil
-	} else if length > enums.MAXBYTEBYINT {
+		return []byte{enums.ARRAY, byte(enums.EncodeHeaderLen)}, nil
+	} else if length > enums.MaxByteByInt {
 		return nil, errors.New("max length exceeded")
 	}
 	var content []byte
@@ -153,7 +153,7 @@ func encodeArray(v reflect.Value) (bytes []byte, err error) {
 		}
 		content = append(content, ret...)
 		contentLength += len(content)
-		if contentLength > enums.MAXBYTEBYINT-enums.ENCODEHEADERLEN-enums.ARRAYSLICEHEADERLEN {
+		if contentLength > enums.MaxByteByInt-enums.EncodeHeaderLen-enums.ArraySliceHeaderLen {
 			return nil, errors.New("max length exceeded")
 		}
 	}
@@ -169,17 +169,17 @@ func encodeString(v reflect.Value) (bytes []byte, err error) {
 	val := v.String()
 	val2Bytes := []byte(val)
 	length := len(val2Bytes)
-	if length > enums.MAXBYTEBYINT-enums.ENCODEHEADERLEN {
+	if length > enums.MaxByteByInt-enums.EncodeHeaderLen {
 		return nil, errors.New("max length exceeded")
 	}
-	return append([]byte{enums.STRING, byte(length + 2)}, val2Bytes...), nil
+	return append([]byte{enums.STRING, byte(length + enums.EncodeHeaderLen)}, val2Bytes...), nil
 }
 
 func encodeSlice(v reflect.Value) (bytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
-		return []byte{enums.SLICE, 2}, nil
-	} else if length > enums.MAXBYTEBYINT {
+		return []byte{enums.SLICE, byte(enums.EncodeHeaderLen)}, nil
+	} else if length > enums.MaxByteByInt {
 		return nil, errors.New("max length exceeded")
 	}
 	var content []byte
@@ -192,11 +192,11 @@ func encodeSlice(v reflect.Value) (bytes []byte, err error) {
 		}
 		content = append(content, ret...)
 		contentLength += len(content)
-		if contentLength > enums.MAXBYTEBYINT-enums.ENCODEHEADERLEN-enums.ARRAYSLICEHEADERLEN {
+		if contentLength > enums.MaxByteByInt-enums.EncodeHeaderLen-enums.ArraySliceHeaderLen {
 			return nil, errors.New("max length exceeded")
 		}
 	}
-	return append([]byte{enums.SLICE, byte(contentLength + 3), byte(length)}, content...), nil
+	return append([]byte{enums.SLICE, byte(contentLength + enums.EncodeHeaderLen + enums.ArraySliceHeaderLen), byte(length)}, content...), nil
 }
 
 func encodeMap(v reflect.Value) (bytes []byte, err error) {
@@ -213,8 +213,8 @@ func encodePtr(v reflect.Value) (bytes []byte, err error) {
 		return nil, e
 	}
 	elemLength := len(elem)
-	if elemLength > enums.MAXBYTEBYINT-enums.ENCODEHEADERLEN {
+	if elemLength > enums.MaxByteByInt-enums.EncodeHeaderLen {
 		return nil, errors.New("max length exceeded")
 	}
-	return append([]byte{enums.PTR, byte(elemLength + 3)}, elem...), nil
+	return append([]byte{enums.PTR, byte(elemLength + enums.EncodeHeaderLen + enums.ArraySliceHeaderLen)}, elem...), nil
 }

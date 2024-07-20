@@ -20,7 +20,7 @@ func encodeInt(v int) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.INT, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.INT, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeInt8(v int8) ([]byte, error) {
@@ -30,7 +30,7 @@ func encodeInt8(v int8) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.INT8, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.INT8, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeInt16(v int16) ([]byte, error) {
@@ -40,7 +40,7 @@ func encodeInt16(v int16) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.INT16, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.INT16, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeInt32(v int32) ([]byte, error) {
@@ -50,7 +50,7 @@ func encodeInt32(v int32) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.INT32, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.INT32, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeInt64(v int64) ([]byte, error) {
@@ -60,5 +60,5 @@ func encodeInt64(v int64) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.INT64, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.INT64, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }

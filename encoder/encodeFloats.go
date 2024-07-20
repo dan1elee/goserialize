@@ -13,7 +13,7 @@ func encodeFloat32(v float32) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.FLOAT32, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.FLOAT32, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }
 
 func encodeFloat64(v float64) ([]byte, error) {
@@ -23,5 +23,5 @@ func encodeFloat64(v float64) ([]byte, error) {
 		return nil, err
 	}
 	bytes := buf.Bytes()
-	return append([]byte{enums.FLOAT64, byte(len(bytes) + 2)}, bytes...), nil
+	return append([]byte{enums.FLOAT64, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
 }

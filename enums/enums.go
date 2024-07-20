@@ -30,12 +30,12 @@ const (
 
 // MAX
 const (
-	MAXBYTE      byte = 0xFF
-	MAXBYTEBYINT int  = 0xFF
+	MaxByte      byte = 0xFF
+	MaxByteByInt int  = 0xFF
 )
 
 //LENGTH
 const (
-	ENCODEHEADERLEN     int = 2
-	ARRAYSLICEHEADERLEN int = 1
+	EncodeHeaderLen     int = 2
+	ArraySliceHeaderLen int = 1
 )
