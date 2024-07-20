@@ -57,8 +57,32 @@ func decodeBool(valBytes []byte, v reflect.Value) (e error) {
 	return nil
 }
 
-func decodeArray(valBytes []byte, v reflect.Value) error {
-	return errors.New("todo")
+func decodeArray(valBytes []byte, v reflect.Value) (e error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e = fmt.Errorf("panic: %v", r)
+		}
+	}()
+	length := len(valBytes)
+	if length != int(valBytes[1]) {
+		return errorlist.ErrUnserializeFromWrongForm
+	}
+	pointerLen := v.Len()
+	actualLen := valBytes[2]
+	if pointerLen != int(actualLen) {
+		return errorlist.ErrUnserializeFromWrongForm
+	}
+	if pointerLen != 0 {
+		elemSize := (length - 3) / pointerLen
+		i := 0
+		for ; i < pointerLen; i++ {
+			err := Decode(valBytes[3+elemSize*i:3+elemSize*(i+1)], v.Index(i))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func decodeStruct(valBytes []byte, v reflect.Value) error {
