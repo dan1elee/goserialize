@@ -4,18 +4,11 @@ import (
 	"bytes"
 	"encoding/binary"
 	"goserial/enums"
-	"unsafe"
 )
 
 func encodeInt(v int) ([]byte, error) {
 	buf := new(bytes.Buffer)
-	var err error
-	intSize := unsafe.Sizeof(v)
-	if intSize == 4 {
-		err = binary.Write(buf, binary.LittleEndian, int32(v))
-	} else {
-		err = binary.Write(buf, binary.LittleEndian, int64(v))
-	}
+	err := binary.Write(buf, binary.LittleEndian, int64(v))
 	if err != nil {
 		return nil, err
 	}
