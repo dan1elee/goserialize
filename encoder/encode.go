@@ -153,7 +153,7 @@ func encodeArray(v reflect.Value) (valBytes []byte, err error) {
 			return nil, err
 		}
 		content = append(content, ret...)
-		contentLength += len(content)
+		contentLength += len(ret)
 		if contentLength > enums.MaxByteByInt-enums.EncodeHeaderLen-enums.ArraySliceHeaderLen {
 			return nil, errorlist.ErrMaxLengthExceed
 		}
@@ -192,7 +192,7 @@ func encodeSlice(v reflect.Value) (valBytes []byte, err error) {
 			return nil, err
 		}
 		content = append(content, ret...)
-		contentLength += len(content)
+		contentLength += len(ret)
 		if contentLength > enums.MaxByteByInt-enums.EncodeHeaderLen-enums.ArraySliceHeaderLen {
 			return nil, errorlist.ErrMaxLengthExceed
 		}
