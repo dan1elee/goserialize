@@ -140,7 +140,7 @@ func encodeComplex(v reflect.Value) (valBytes []byte, err error) {
 func encodeArray(v reflect.Value) (valBytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
-		return []byte{enums.ARRAY, byte(enums.EncodeHeaderLen)}, nil
+		return []byte{enums.ARRAY, byte(enums.EncodeHeaderLen + 1), 0}, nil
 	} else if length > enums.MaxByteByInt {
 		return nil, errorlist.ErrMaxLengthExceed
 	}
@@ -179,7 +179,7 @@ func encodeString(v reflect.Value) (valBytes []byte, err error) {
 func encodeSlice(v reflect.Value) (valBytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
-		return []byte{enums.SLICE, byte(enums.EncodeHeaderLen)}, nil
+		return []byte{enums.SLICE, byte(enums.EncodeHeaderLen + 1), 0}, nil
 	} else if length > enums.MaxByteByInt {
 		return nil, errorlist.ErrMaxLengthExceed
 	}
