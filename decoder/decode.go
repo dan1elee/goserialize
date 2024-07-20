@@ -107,8 +107,32 @@ func decodeString(valBytes []byte, v reflect.Value) (e error) {
 	return nil
 }
 
-func decodeSlice(valBytes []byte, v reflect.Value) error {
-	return errors.New("todo")
+func decodeSlice(valBytes []byte, v reflect.Value) (e error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e = fmt.Errorf("panic: %v", r)
+		}
+	}()
+	length := len(valBytes)
+	if length != int(valBytes[1]) {
+		return errorlist.ErrUnserializeFromWrongForm
+	}
+	actualLen := int(valBytes[2])
+	if actualLen != 0 {
+		elemSize := (length - 3) / actualLen
+		newSlice := v
+		i := 0
+		for ; i < actualLen; i++ {
+			ptr := reflect.New(v.Type().Elem())
+			err := Decode(valBytes[3+elemSize*i:3+elemSize*(i+1)], ptr.Elem())
+			if err != nil {
+				return err
+			}
+			newSlice = reflect.Append(newSlice, ptr.Elem())
+		}
+		v.Set(newSlice)
+	}
+	return nil
 }
 
 func decodeMap(valBytes []byte, v reflect.Value) error {
