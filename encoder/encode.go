@@ -205,6 +205,16 @@ func encodeMap(v reflect.Value) (bytes []byte, err error) {
 }
 
 func encodePtr(v reflect.Value) (bytes []byte, err error) {
-	// todo
-	return nil, errors.New("TODO")
+	if v.IsNil() {
+		return []byte{enums.PTR, 2}, nil
+	}
+	elem, e := Encode(v.Elem())
+	if e != nil {
+		return nil, e
+	}
+	elemLength := len(elem)
+	if elemLength > enums.MAXBYTEBYINT-enums.ENCODEHEADERLEN {
+		return nil, errors.New("max length exceeded")
+	}
+	return append([]byte{enums.PTR, byte(elemLength + 3)}, elem...), nil
 }
