@@ -102,9 +102,19 @@ func decodePtr(valBytes []byte, v reflect.Value) (e error) {
 		return errorlist.ErrUnserializeFromWrongForm
 	}
 	if length == 2 {
-		v.SetPointer(nil)
+		v.Set(reflect.Zero(v.Type()))
 	} else {
-		Decode(valBytes[2:], v)
+		inValue := v
+		if inValue.IsNil() {
+			inValue = reflect.New(v.Type().Elem())
+		}
+		err := Decode(valBytes[2:], inValue.Elem())
+		if err != nil {
+			return err
+		}
+		if v.IsNil() {
+			v.Set(inValue)
+		}
 	}
-	return errors.New("todo")
+	return nil
 }
