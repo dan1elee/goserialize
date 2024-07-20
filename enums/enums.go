@@ -27,3 +27,15 @@ const (
 	PTR
 	ENDOFTYPE
 )
+
+// MAX
+const (
+	MAXBYTE      byte = 0xFF
+	MAXBYTEBYINT int  = 0xFF
+)
+
+//LENGTH
+const (
+	ENCODEHEADERLEN     int = 2
+	ARRAYSLICEHEADERLEN int = 1
+)
