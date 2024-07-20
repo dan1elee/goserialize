@@ -19,8 +19,8 @@ func encodeUint(v uint) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes := buf.Bytes()
-	return append([]byte{enums.UINT, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
+	valBytes := buf.Bytes()
+	return append([]byte{enums.UINT, byte(len(valBytes) + enums.EncodeHeaderLen)}, valBytes...), nil
 }
 
 func encodeUint8(v uint8) ([]byte, error) {
@@ -29,8 +29,8 @@ func encodeUint8(v uint8) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes := buf.Bytes()
-	return append([]byte{enums.UINT8, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
+	valBytes := buf.Bytes()
+	return append([]byte{enums.UINT8, byte(len(valBytes) + enums.EncodeHeaderLen)}, valBytes...), nil
 }
 
 func encodeUint16(v uint16) ([]byte, error) {
@@ -39,8 +39,8 @@ func encodeUint16(v uint16) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes := buf.Bytes()
-	return append([]byte{enums.UINT16, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
+	valBytes := buf.Bytes()
+	return append([]byte{enums.UINT16, byte(len(valBytes) + enums.EncodeHeaderLen)}, valBytes...), nil
 }
 
 func encodeUint32(v uint32) ([]byte, error) {
@@ -49,8 +49,8 @@ func encodeUint32(v uint32) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes := buf.Bytes()
-	return append([]byte{enums.UINT32, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
+	valBytes := buf.Bytes()
+	return append([]byte{enums.UINT32, byte(len(valBytes) + enums.EncodeHeaderLen)}, valBytes...), nil
 }
 
 func encodeUint64(v uint64) ([]byte, error) {
@@ -59,6 +59,6 @@ func encodeUint64(v uint64) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes := buf.Bytes()
-	return append([]byte{enums.UINT64, byte(len(bytes) + enums.EncodeHeaderLen)}, bytes...), nil
+	valBytes := buf.Bytes()
+	return append([]byte{enums.UINT64, byte(len(valBytes) + enums.EncodeHeaderLen)}, valBytes...), nil
 }

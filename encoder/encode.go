@@ -38,10 +38,10 @@ func Encode(refVal reflect.Value) ([]byte, error) {
 	}
 }
 
-func encodeBool(v reflect.Value) (bytes []byte, err error) {
+func encodeBool(v reflect.Value) (valBytes []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			bytes = nil
+			valBytes = nil
 			err = fmt.Errorf("panic: %v", r)
 		}
 	}()
@@ -53,10 +53,10 @@ func encodeBool(v reflect.Value) (bytes []byte, err error) {
 	}
 }
 
-func encodeIntx(v reflect.Value) (bytes []byte, err error) {
+func encodeIntx(v reflect.Value) (valBytes []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			bytes = nil
+			valBytes = nil
 			err = fmt.Errorf("panic: %v", r)
 		}
 	}()
@@ -77,10 +77,10 @@ func encodeIntx(v reflect.Value) (bytes []byte, err error) {
 	}
 }
 
-func encodeUintx(v reflect.Value) (bytes []byte, err error) {
+func encodeUintx(v reflect.Value) (valBytes []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			bytes = nil
+			valBytes = nil
 			err = fmt.Errorf("panic: %v", r)
 		}
 	}()
@@ -101,10 +101,10 @@ func encodeUintx(v reflect.Value) (bytes []byte, err error) {
 	}
 }
 
-func encodeFloatx(v reflect.Value) (bytes []byte, err error) {
+func encodeFloatx(v reflect.Value) (valBytes []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			bytes = nil
+			valBytes = nil
 			err = fmt.Errorf("panic: %v", r)
 		}
 	}()
@@ -119,10 +119,10 @@ func encodeFloatx(v reflect.Value) (bytes []byte, err error) {
 	}
 }
 
-func encodeComplex(v reflect.Value) (bytes []byte, err error) {
+func encodeComplex(v reflect.Value) (valBytes []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			bytes = nil
+			valBytes = nil
 			err = fmt.Errorf("panic: %v", r)
 		}
 	}()
@@ -137,7 +137,7 @@ func encodeComplex(v reflect.Value) (bytes []byte, err error) {
 	}
 }
 
-func encodeArray(v reflect.Value) (bytes []byte, err error) {
+func encodeArray(v reflect.Value) (valBytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
 		return []byte{enums.ARRAY, byte(enums.EncodeHeaderLen)}, nil
@@ -161,12 +161,12 @@ func encodeArray(v reflect.Value) (bytes []byte, err error) {
 	return append([]byte{enums.ARRAY, byte(contentLength + 3), byte(length)}, content...), nil
 }
 
-func encodeStruct(v reflect.Value) (bytes []byte, err error) {
+func encodeStruct(v reflect.Value) (valBytes []byte, err error) {
 	// todo
 	return nil, errors.New("TODO")
 }
 
-func encodeString(v reflect.Value) (bytes []byte, err error) {
+func encodeString(v reflect.Value) (valBytes []byte, err error) {
 	val := v.String()
 	val2Bytes := []byte(val)
 	length := len(val2Bytes)
@@ -176,7 +176,7 @@ func encodeString(v reflect.Value) (bytes []byte, err error) {
 	return append([]byte{enums.STRING, byte(length + enums.EncodeHeaderLen)}, val2Bytes...), nil
 }
 
-func encodeSlice(v reflect.Value) (bytes []byte, err error) {
+func encodeSlice(v reflect.Value) (valBytes []byte, err error) {
 	length := v.Len()
 	if length <= 0 {
 		return []byte{enums.SLICE, byte(enums.EncodeHeaderLen)}, nil
@@ -200,12 +200,12 @@ func encodeSlice(v reflect.Value) (bytes []byte, err error) {
 	return append([]byte{enums.SLICE, byte(contentLength + enums.EncodeHeaderLen + enums.ArraySliceHeaderLen), byte(length)}, content...), nil
 }
 
-func encodeMap(v reflect.Value) (bytes []byte, err error) {
+func encodeMap(v reflect.Value) (valBytes []byte, err error) {
 	// todo
 	return nil, errors.New("TODO")
 }
 
-func encodePtr(v reflect.Value) (bytes []byte, err error) {
+func encodePtr(v reflect.Value) (valBytes []byte, err error) {
 	if v.IsNil() {
 		return []byte{enums.PTR, 2}, nil
 	}
