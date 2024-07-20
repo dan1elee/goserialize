@@ -119,16 +119,18 @@ func decodeSlice(valBytes []byte, v reflect.Value) (e error) {
 	}
 	actualLen := int(valBytes[2])
 	if actualLen != 0 {
-		elemSize := (length - 3) / actualLen
+		lastEnd := 3
 		newSlice := v
 		i := 0
 		for ; i < actualLen; i++ {
 			ptr := reflect.New(v.Type().Elem())
-			err := Decode(valBytes[3+elemSize*i:3+elemSize*(i+1)], ptr.Elem())
+			nowEnd := lastEnd + int(valBytes[lastEnd+1])
+			err := Decode(valBytes[lastEnd:nowEnd], ptr.Elem())
 			if err != nil {
 				return err
 			}
 			newSlice = reflect.Append(newSlice, ptr.Elem())
+			lastEnd = nowEnd
 		}
 		v.Set(newSlice)
 	}
