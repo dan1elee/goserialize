@@ -217,5 +217,5 @@ func encodePtr(v reflect.Value) (valBytes []byte, err error) {
 	if elemLength > enums.MaxByteByInt-enums.EncodeHeaderLen {
 		return nil, errorlist.ErrMaxLengthExceed
 	}
-	return append([]byte{enums.PTR, byte(elemLength + enums.EncodeHeaderLen + enums.ArraySliceHeaderLen)}, elem...), nil
+	return append([]byte{enums.PTR, byte(elemLength + enums.EncodeHeaderLen)}, elem...), nil
 }
