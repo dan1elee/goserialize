@@ -3,7 +3,7 @@ package encoder
 import (
 	"bytes"
 	"encoding/binary"
-	"goserial/enums"
+	"goserialize/enums"
 )
 
 func encodeComplex64(v complex64) ([]byte, error) {

@@ -3,7 +3,7 @@ package encoder
 import (
 	"bytes"
 	"encoding/binary"
-	"goserial/enums"
+	"goserialize/enums"
 )
 
 func encodeFloat32(v float32) ([]byte, error) {

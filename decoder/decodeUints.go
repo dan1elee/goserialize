@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"goserial/enums"
-	"goserial/errorlist"
+	"goserialize/enums"
+	"goserialize/errorlist"
 	"reflect"
 )
 

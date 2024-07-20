@@ -1,9 +1,9 @@
-package goserial
+package goserialize
 
 import (
-	"goserial/decoder"
-	"goserial/encoder"
-	"goserial/errorlist"
+	"goserialize/decoder"
+	"goserialize/encoder"
+	"goserialize/errorlist"
 	"reflect"
 )
 

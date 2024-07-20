@@ -3,8 +3,8 @@ package encoder
 import (
 	"errors"
 	"fmt"
-	"goserial/enums"
-	"goserial/errorlist"
+	"goserialize/enums"
+	"goserialize/errorlist"
 	"reflect"
 )
 

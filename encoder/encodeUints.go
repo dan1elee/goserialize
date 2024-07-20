@@ -3,7 +3,7 @@ package encoder
 import (
 	"bytes"
 	"encoding/binary"
-	"goserial/enums"
+	"goserialize/enums"
 	"unsafe"
 )
 
