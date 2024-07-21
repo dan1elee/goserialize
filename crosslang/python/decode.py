@@ -1,4 +1,6 @@
 from enum import Enum, auto
+from typing import List, Any
+from exceptions.exceptions import WrongFormException, WrongFormErrorType
 import struct
 
 
@@ -32,10 +34,10 @@ class Type(Enum):
 def decode(data: bytes):
     length = len(data)
     if length < 2:
-        return None
+        raise WrongFormException(WrongFormErrorType.LengthTooShort)
     elif data[1] != length:
-        return None
-    if data[0]==Type.BOOL.value:
+        raise WrongFormException(WrongFormErrorType.LengthNotEqual)
+    if data[0] == Type.BOOL.value:
         return struct.unpack('<?', data[2:])[0]
     elif data[0] == Type.INT.value:
         return struct.unpack('<q', data[2:])[0]
@@ -62,12 +64,25 @@ def decode(data: bytes):
     elif data[0] == Type.FLOAT64.value:
         return struct.unpack('<d', data[2:])[0]
     elif data[0] == Type.COMPLEX64.value:
-        real = struct.unpack('<f',data[2:6])[0]
-        imag = struct.unpack('<f',data[6:10])[0]
-        return complex(real,imag)
+        real = struct.unpack('<f', data[2:6])[0]
+        imag = struct.unpack('<f', data[6:10])[0]
+        return complex(real, imag)
     elif data[0] == Type.COMPLEX128.value:
-        real = struct.unpack('<d',data[2:10])[0]
-        imag = struct.unpack('<d',data[10:18])[0]
-        return complex(real,imag)
+        real = struct.unpack('<d', data[2:10])[0]
+        imag = struct.unpack('<d', data[10:18])[0]
+        return complex(real, imag)
+    elif data[0] == Type.ARRAY.value:
+        return decodeArray(data)
     else:
-        return None
+        raise WrongFormException(WrongFormErrorType.TypeNotSupport)
+
+
+def decodeArray(data: bytes) -> List[Any]:
+    ret = list()
+    length = len(data)
+    actualLen = data[2]
+    if actualLen != 0:
+        elemSize = (length - 3) // actualLen
+        for i in range(actualLen):
+            ret.append(decode(data[3+elemSize*i:3+elemSize*(i+1)]))
+    return ret
