@@ -61,5 +61,13 @@ def decode(data: bytes):
         return struct.unpack('<f', data[2:])[0]
     elif data[0] == Type.FLOAT64.value:
         return struct.unpack('<d', data[2:])[0]
+    elif data[0] == Type.COMPLEX64.value:
+        real = struct.unpack('<f',data[2:6])[0]
+        imag = struct.unpack('<f',data[6:10])[0]
+        return complex(real,imag)
+    elif data[0] == Type.COMPLEX128.value:
+        real = struct.unpack('<d',data[2:10])[0]
+        imag = struct.unpack('<d',data[10:18])[0]
+        return complex(real,imag)
     else:
         return None
