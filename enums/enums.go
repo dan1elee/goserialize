@@ -36,6 +36,6 @@ const (
 
 //LENGTH
 const (
-	EncodeHeaderLen     int = 2
-	ArraySliceHeaderLen int = 1
+	EncodeHeaderLen           int = 2
+	ArraySliceStructHeaderLen int = 1
 )

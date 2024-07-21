@@ -1,7 +1,6 @@
 package decoder
 
 import (
-	"errors"
 	"fmt"
 	"goserialize/enums"
 	"goserialize/errorlist"
@@ -85,8 +84,43 @@ func decodeArray(valBytes []byte, v reflect.Value) (e error) {
 	return nil
 }
 
-func decodeStruct(valBytes []byte, v reflect.Value) error {
-	return errors.New("todo")
+func decodeStruct(valBytes []byte, v reflect.Value) (e error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e = fmt.Errorf("panic: %v", r)
+		}
+	}()
+	length := len(valBytes)
+	if length != int(valBytes[1]) {
+		return errorlist.ErrUnserializeFromWrongForm
+	}
+	actualLen := int(valBytes[2])
+	if actualLen != 0 {
+		lastEnd := 3
+		i := 0
+		for ; i < actualLen; i++ {
+			strType := reflect.TypeOf("")
+			fieldName := reflect.New(strType)
+			fieldNameLen := int(valBytes[lastEnd+1])
+			err := Decode(valBytes[lastEnd:lastEnd+fieldNameLen], fieldName.Elem())
+			if err != nil {
+				return err
+			}
+			lastEnd += fieldNameLen
+			field := v.FieldByName(fieldName.Elem().String())
+			fieldValue := reflect.New(field.Type())
+			fieldValueLen := int(valBytes[lastEnd+1])
+			err = Decode(valBytes[lastEnd:lastEnd+fieldValueLen], fieldValue.Elem())
+			if err != nil {
+				return err
+			}
+			lastEnd += fieldValueLen
+			if v.FieldByName(fieldName.Elem().String()).CanSet() {
+				v.FieldByName(fieldName.Elem().String()).Set(fieldValue.Elem())
+			}
+		}
+	}
+	return nil
 }
 
 func decodeString(valBytes []byte, v reflect.Value) (e error) {
