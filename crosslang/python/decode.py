@@ -31,11 +31,35 @@ class Type(Enum):
 
 def decode(data: bytes):
     length = len(data)
-    print(length)
     if length < 2:
         return None
     elif data[1] != length:
         return None
-    if data[0] == Type.INT32.value:
+    if data[0]==Type.BOOL.value:
+        return struct.unpack('<?', data[2:])[0]
+    elif data[0] == Type.INT.value:
+        return struct.unpack('<q', data[2:])[0]
+    elif data[0] == Type.INT8.value:
+        return struct.unpack('<b', data[2:])[0]
+    elif data[0] == Type.INT16.value:
+        return struct.unpack('<h', data[2:])[0]
+    elif data[0] == Type.INT32.value:
         return struct.unpack('<i', data[2:])[0]
-
+    elif data[0] == Type.INT64.value:
+        return struct.unpack('<q', data[2:])[0]
+    elif data[0] == Type.UINT.value:
+        return struct.unpack('<Q', data[2:])[0]
+    elif data[0] == Type.UINT8.value:
+        return struct.unpack('<B', data[2:])[0]
+    elif data[0] == Type.UINT16.value:
+        return struct.unpack('<H', data[2:])[0]
+    elif data[0] == Type.UINT32.value:
+        return struct.unpack('<I', data[2:])[0]
+    elif data[0] == Type.UINT64.value:
+        return struct.unpack('<Q', data[2:])[0]
+    elif data[0] == Type.FLOAT32.value:
+        return struct.unpack('<f', data[2:])[0]
+    elif data[0] == Type.FLOAT64.value:
+        return struct.unpack('<d', data[2:])[0]
+    else:
+        return None
