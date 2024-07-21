@@ -16,6 +16,6 @@
 
 ### Serialize:
 
-`Int`, `Uint`, `Float`, `Complex`, `String`, `Ptr`
+`Int`, `Uint`, `Float`, `Complex`, `Array`, `String`, `Slice`, `Ptr`
 
 > dan1elee starting at 2024.7.20 
