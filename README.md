@@ -10,12 +10,12 @@
 
 ### Serialize:
 
-`Int`, `Uint`, `Float`, `Complex`, `Array`, `String`, `Slice`, `Ptr`
+`Int`, `Uint`, `Float`, `Complex`, `Array`, `String`, `Slice`, `Map`, `Ptr`
 
 ### 反序列化：
 
 ### Serialize:
 
-`Int`, `Uint`, `Float`, `Complex`, `Array`, `String`, `Slice`, `Ptr`
+`Int`, `Uint`, `Float`, `Complex`, `Array`, `String`, `Slice`, `Map`, `Ptr`
 
 > dan1elee starting at 2024.7.20 
