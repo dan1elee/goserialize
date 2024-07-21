@@ -1,6 +1,6 @@
-# goserialize - go序列化与反序列化 - 跨语言的
+# goserialize - go序列化与反序列化 - 支持跨语言反序列化
 
-# goserialize - go serialize and unserialize - cross-language
+# goserialize - go serialize and unserialize - cross-language unserialize
 
 ## 目前支持的类型
 
@@ -14,7 +14,7 @@
 
 ### 反序列化：
 
-### Serialize:
+### Unserialize:
 
 `Int`, `Uint`, `Float`, `Complex`, `Array`, `Struct`, `String`, `Slice`, `Map`, `Ptr`
 
