@@ -201,8 +201,37 @@ func encodeSlice(v reflect.Value) (valBytes []byte, err error) {
 }
 
 func encodeMap(v reflect.Value) (valBytes []byte, err error) {
-	// todo
-	return nil, errors.New("TODO")
+	length := v.Len()
+	if length <= 0 {
+		return []byte{enums.MAP, byte(enums.EncodeHeaderLen + 1), 0}, nil
+	} else if length > enums.MaxByteByInt {
+		return nil, errorlist.ErrMaxLengthExceed
+	}
+	keys := v.MapKeys()
+	var content []byte
+	var contentLength int = 0
+	for _, key := range keys {
+		valI := v.MapIndex(key)
+		// Serialize key
+		keyRet, err := Encode(key)
+		if err != nil {
+			return nil, err
+		}
+		content = append(content, keyRet...)
+		contentLength += len(keyRet)
+
+		// Serialize value
+		valRet, err := Encode(valI)
+		if err != nil {
+			return nil, err
+		}
+		content = append(content, valRet...)
+		contentLength += len(valRet)
+		if contentLength > enums.MaxByteByInt-enums.EncodeHeaderLen-enums.ArraySliceHeaderLen {
+			return nil, errorlist.ErrMaxLengthExceed
+		}
+	}
+	return append([]byte{enums.MAP, byte(contentLength + enums.EncodeHeaderLen + enums.ArraySliceHeaderLen), byte(length)}, content...), nil
 }
 
 func encodePtr(v reflect.Value) (valBytes []byte, err error) {

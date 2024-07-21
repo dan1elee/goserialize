@@ -137,8 +137,41 @@ func decodeSlice(valBytes []byte, v reflect.Value) (e error) {
 	return nil
 }
 
-func decodeMap(valBytes []byte, v reflect.Value) error {
-	return errors.New("todo")
+func decodeMap(valBytes []byte, v reflect.Value) (e error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e = fmt.Errorf("panic: %v", r)
+		}
+	}()
+	length := len(valBytes)
+	if length != int(valBytes[1]) {
+		return errorlist.ErrUnserializeFromWrongForm
+	}
+	actualLen := int(valBytes[2])
+	if actualLen != 0 {
+		lastEnd := 3
+		newMap := reflect.MakeMapWithSize(v.Type(), actualLen)
+		i := 0
+		for ; i < actualLen; i++ {
+			key := reflect.New(v.Type().Key())
+			keyLen := int(valBytes[lastEnd+1])
+			err := Decode(valBytes[lastEnd:lastEnd+keyLen], key.Elem())
+			if err != nil {
+				return err
+			}
+			lastEnd += keyLen
+			value := reflect.New(v.Type().Elem())
+			valueLen := int(valBytes[lastEnd+1])
+			err = Decode(valBytes[lastEnd:lastEnd+valueLen], value.Elem())
+			if err != nil {
+				return err
+			}
+			lastEnd += valueLen
+			newMap.SetMapIndex(key.Elem(), value.Elem())
+		}
+		v.Set(newMap)
+	}
+	return nil
 }
 
 func decodePtr(valBytes []byte, v reflect.Value) (e error) {
