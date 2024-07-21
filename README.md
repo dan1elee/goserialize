@@ -1,6 +1,6 @@
-# goserialize-go序列化与反序列化
+# goserialize - go序列化与反序列化 - 跨语言的
 
-# goserialize- go serialize and unserialize
+# goserialize - go serialize and unserialize - cross-language
 
 ## 目前支持的类型
 
