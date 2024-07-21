@@ -73,6 +73,8 @@ def decode(data: bytes):
         return complex(real, imag)
     elif data[0] == Type.ARRAY.value:
         return decodeArray(data)
+    elif data[0] == Type.STRING.value:
+        return data[2:].decode('utf-8')
     else:
         raise WrongFormException(WrongFormErrorType.TypeNotSupport)
 
