@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import List, Any
+from typing import Dict, List, Any
 from exceptions.exceptions import WrongFormException, WrongFormErrorType
 import struct
 
@@ -73,8 +73,8 @@ def decode(data: bytes):
         return complex(real, imag)
     elif data[0] == Type.ARRAY.value:
         return decodeArray(data)
-    elif data[0] == Type.STRUCT.value:
-        return decodeStruct(data)
+    elif data[0] == Type.STRUCT.value or data[0] == Type.MAP.value:
+        return decodeStructMap(data)
     elif data[0] == Type.STRING.value:
         return data[2:].decode("utf-8")
     elif data[0] == Type.SLICE.value:
@@ -106,7 +106,7 @@ def decodeSlice(data: bytes) -> List[Any]:
     return ret
 
 
-def decodeStruct(data: bytes) -> List[Any]:
+def decodeStructMap(data: bytes) -> Dict[str, Any]:
     ret = dict()
     actualLen = data[2]
     if actualLen != 0:
