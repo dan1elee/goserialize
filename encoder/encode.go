@@ -167,6 +167,9 @@ func encodeStruct(v reflect.Value) (valBytes []byte, err error) {
 	length := v.NumField()
 	for i := 0; i < length; i++ {
 		fieldName := t.Field(i).Name
+		if !v.Field(i).CanInterface() {
+			continue
+		}
 		fieldValue := v.Field(i).Interface()
 		// Serialize name
 		nameRet, err := Encode(reflect.ValueOf(fieldName))
