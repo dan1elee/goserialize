@@ -75,6 +75,8 @@ def decode(data: bytes):
         return decodeArray(data)
     elif data[0] == Type.STRING.value:
         return data[2:].decode('utf-8')
+    elif data[0] == Type.SLICE.value:
+        return decodeSlice(data)
     else:
         raise WrongFormException(WrongFormErrorType.TypeNotSupport)
 
@@ -87,4 +89,15 @@ def decodeArray(data: bytes) -> List[Any]:
         elemSize = (length - 3) // actualLen
         for i in range(actualLen):
             ret.append(decode(data[3+elemSize*i:3+elemSize*(i+1)]))
+    return ret
+
+def decodeSlice(data: bytes)-> List[Any]:
+    ret = list()
+    actualLen = data[2]
+    if actualLen != 0 :
+        lastEnd = 3
+        for _ in range(actualLen):
+            nowEnd = lastEnd + int(data[lastEnd+1])
+            ret.append(decode(data[lastEnd:nowEnd]))
+            lastEnd = nowEnd
     return ret
