@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <complex>
+#include <map>
 
 typedef uint8_t byte;
 typedef std::complex<float> complex64;
@@ -58,6 +59,8 @@ namespace enums
 
 typedef union unionval UnionVal;
 
+typedef std::map<std::string, UnionVal> Map;
+
 typedef struct
 {
     int len;
@@ -80,6 +83,8 @@ typedef union unionval
     complex64 complex64Val;
     complex128 complex128Val;
     Arr arrVal;
+    Map mapVal;
+    std::string strVal;
     // TODO
 } UnionVal;
 
