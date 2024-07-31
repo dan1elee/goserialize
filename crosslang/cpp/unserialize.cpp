@@ -51,36 +51,13 @@ std::string UnserializeException::type2Str(int type) const
     return ret;
 }
 
-namespace enums
+enums::Types getDataType(byte *data, int len)
 {
-    enum Types
+    if (len < 2)
     {
-        NIL,
-        BOOL,
-        INT,
-        UINT,
-        INT8,
-        UINT8,
-        INT16,
-        UINT16,
-        INT32,
-        UINT32,
-        INT64,
-        UINT64,
-        FLOAT32,
-        FLOAT64,
-        COMPLEX64,
-        COMPLEX128,
-        // UINTPTR
-        ARRAY,
-        STRUCT,
-        STRING,
-        SLICE,
-        MAP,
-        PTR,
-        ENDOFTYPE
-    };
-    const int EncodeHeaderLen = 2;
+        throw UnserializeException(3);
+    }
+    return enums::Types(data[0]);
 }
 
 void unserialize(byte *data, int len, void *result)
@@ -179,13 +156,13 @@ void unserialize(byte *data, int len, void *result)
     }
     case enums::COMPLEX64:
     {
-        std::complex<float> res = readComplex64(data, len);
+        complex64 res = readComplex64(data, len);
         memcpy(result, &res, sizeof(res));
         break;
     }
     case enums::COMPLEX128:
     {
-        std::complex<double> res = readComplex128(data, len);
+        complex128 res = readComplex128(data, len);
         memcpy(result, &res, sizeof(res));
         break;
     }
@@ -317,7 +294,7 @@ double readFloat64(byte *data, int len)
     return *((double *)value);
 }
 
-std::complex<float> readComplex64(byte *data, int len)
+complex64 readComplex64(byte *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 8)
     {
@@ -328,10 +305,10 @@ std::complex<float> readComplex64(byte *data, int len)
     float real = *((float *)value);
     memcpy(value, data + 6, 4);
     float imag = *((float *)value);
-    return std::complex<float>(real, imag);
+    return complex64(real, imag);
 }
 
-std::complex<double> readComplex128(byte *data, int len)
+complex128 readComplex128(byte *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 16)
     {
@@ -342,5 +319,5 @@ std::complex<double> readComplex128(byte *data, int len)
     double real = *((double *)value);
     memcpy(value, data + 10, 8);
     double imag = *((double *)value);
-    return std::complex<double>(real, imag);
+    return complex128(real, imag);
 }
