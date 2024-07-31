@@ -66,7 +66,7 @@ void unserialize(byte *data, int len, void *result)
     {
         throw UnserializeException(1);
     }
-    else if (data == nullptr)
+    else if (result == nullptr)
     {
         throw UnserializeException(2);
     }
