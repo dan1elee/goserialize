@@ -5,7 +5,7 @@
 #include <complex>
 #include <map>
 
-typedef uint8_t byte;
+typedef uint8_t info;
 typedef std::complex<float> complex64;
 typedef std::complex<double> complex128;
 
@@ -94,28 +94,30 @@ typedef struct
     UnionVal val;
 } typeAndVal;
 
-enums::Types getDataType(byte *data, int len);
+enums::Types getDataType(info *data, int len);
 
-void unserialize(byte *data, int len, void *result);
+void unserialize(info *data, int len, void *result);
 
-bool readBool(byte *data, int len);
+bool readBool(info *data, int len);
 
-int64_t readInt(byte *data, int len);
-int8_t readInt8(byte *data, int len);
-int16_t readInt16(byte *data, int len);
-int32_t readInt32(byte *data, int len);
-int64_t readInt64(byte *data, int len);
+int64_t readInt(info *data, int len);
+int8_t readInt8(info *data, int len);
+int16_t readInt16(info *data, int len);
+int32_t readInt32(info *data, int len);
+int64_t readInt64(info *data, int len);
 
-uint64_t readUint(byte *data, int len);
-uint8_t readUint8(byte *data, int len);
-uint16_t readUint16(byte *data, int len);
-uint32_t readUint32(byte *data, int len);
-uint64_t readUint64(byte *data, int len);
+uint64_t readUint(info *data, int len);
+uint8_t readUint8(info *data, int len);
+uint16_t readUint16(info *data, int len);
+uint32_t readUint32(info *data, int len);
+uint64_t readUint64(info *data, int len);
 
-float readFloat32(byte *data, int len);
-double readFloat64(byte *data, int len);
+float readFloat32(info *data, int len);
+double readFloat64(info *data, int len);
 
-complex64 readComplex64(byte *data, int len);
-complex128 readComplex128(byte *data, int len);
+complex64 readComplex64(info *data, int len);
+complex128 readComplex128(info *data, int len);
+
+std::string readString(info *data, int len);
 
 #endif
