@@ -51,7 +51,7 @@ std::string UnserializeException::type2Str(int type) const
     return ret;
 }
 
-enums::Types getDataType(byte *data, int len)
+enums::Types getDataType(info *data, int len)
 {
     if (len < 2)
     {
@@ -60,7 +60,7 @@ enums::Types getDataType(byte *data, int len)
     return enums::Types(data[0]);
 }
 
-void unserialize(byte *data, int len, void *result)
+void unserialize(info *data, int len, void *result)
 {
     if (data == nullptr)
     {
@@ -166,6 +166,12 @@ void unserialize(byte *data, int len, void *result)
         memcpy(result, &res, sizeof(res));
         break;
     }
+    case enums::STRING:
+    {
+        std::string res = readString(data, len);
+        memcpy(result, &res, sizeof(res));
+        break;
+    }
     default:
     {
         throw UnserializeException(5);
@@ -173,7 +179,7 @@ void unserialize(byte *data, int len, void *result)
     }
 }
 
-bool readBool(byte *data, int len)
+bool readBool(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 1 || (data[2] != 0 && data[2] != 1))
     {
@@ -182,32 +188,32 @@ bool readBool(byte *data, int len)
     return data[2] == 1;
 }
 
-int64_t readInt(byte *data, int len)
+int64_t readInt(info *data, int len)
 {
     return (int64_t)readUint(data, len);
 }
 
-int8_t readInt8(byte *data, int len)
+int8_t readInt8(info *data, int len)
 {
     return (int8_t)readUint8(data, len);
 }
 
-int16_t readInt16(byte *data, int len)
+int16_t readInt16(info *data, int len)
 {
     return (int16_t)readUint16(data, len);
 }
 
-int32_t readInt32(byte *data, int len)
+int32_t readInt32(info *data, int len)
 {
     return (int32_t)readUint32(data, len);
 }
 
-int64_t readInt64(byte *data, int len)
+int64_t readInt64(info *data, int len)
 {
     return (int64_t)readUint64(data, len);
 }
 
-uint64_t readUint(byte *data, int len)
+uint64_t readUint(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 8)
     {
@@ -221,7 +227,7 @@ uint64_t readUint(byte *data, int len)
     return ret;
 }
 
-uint8_t readUint8(byte *data, int len)
+uint8_t readUint8(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 1)
     {
@@ -230,7 +236,7 @@ uint8_t readUint8(byte *data, int len)
     return data[2];
 }
 
-uint16_t readUint16(byte *data, int len)
+uint16_t readUint16(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 2)
     {
@@ -244,7 +250,7 @@ uint16_t readUint16(byte *data, int len)
     return ret;
 }
 
-uint32_t readUint32(byte *data, int len)
+uint32_t readUint32(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 4)
     {
@@ -258,7 +264,7 @@ uint32_t readUint32(byte *data, int len)
     return ret;
 }
 
-uint64_t readUint64(byte *data, int len)
+uint64_t readUint64(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 8)
     {
@@ -272,35 +278,35 @@ uint64_t readUint64(byte *data, int len)
     return ret;
 }
 
-float readFloat32(byte *data, int len)
+float readFloat32(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 4)
     {
         throw UnserializeException(4);
     }
-    byte value[4];
+    info value[4];
     memcpy(value, data + 2, 4);
     return *((float *)value);
 }
 
-double readFloat64(byte *data, int len)
+double readFloat64(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 8)
     {
         throw UnserializeException(4);
     }
-    byte value[8];
+    info value[8];
     memcpy(value, data + 2, 8);
     return *((double *)value);
 }
 
-complex64 readComplex64(byte *data, int len)
+complex64 readComplex64(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 8)
     {
         throw UnserializeException(4);
     }
-    byte value[4];
+    info value[4];
     memcpy(value, data + 2, 4);
     float real = *((float *)value);
     memcpy(value, data + 6, 4);
@@ -308,16 +314,32 @@ complex64 readComplex64(byte *data, int len)
     return complex64(real, imag);
 }
 
-complex128 readComplex128(byte *data, int len)
+complex128 readComplex128(info *data, int len)
 {
     if (len != (int)(data[1]) || len - enums::EncodeHeaderLen != 16)
     {
         throw UnserializeException(4);
     }
-    byte value[8];
+    info value[8];
     memcpy(value, data + 2, 8);
     double real = *((double *)value);
     memcpy(value, data + 10, 8);
     double imag = *((double *)value);
     return complex128(real, imag);
+}
+
+std::string readString(info *data, int len)
+{
+    if (len != (int)(data[1]))
+    {
+        throw UnserializeException(4);
+    }
+    if (len == 2)
+    {
+        return "";
+    }
+    else
+    {
+        return std::string((char *)(data + 2));
+    }
 }
